@@ -11,28 +11,37 @@
     >
 
     <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Countdown"
        />
 
     <TextView
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tarix"
          />
 
     <TextView
+        android:id="@+id/tvDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Gün"
         />
 
     <TextView
+        android:id="@+id/tvHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Saat"
         />
+
+    <Button
+        android:id="@+id/btnSelectDate"        android:layout_width="192dp"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 
 
 </LinearLayout>
