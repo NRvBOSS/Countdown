@@ -38,10 +38,24 @@
         android:text="Saat"
         />
 
+    <TextView
+        android:id="@+id/tvMinute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dəqiqə"
+        />
+
+    <TextView
+        android:id="@+id/tvSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saniyə"
+        />
+
     <Button
         android:id="@+id/btnSelectDate"        android:layout_width="192dp"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Selected Date" />
 
 
 </LinearLayout>
