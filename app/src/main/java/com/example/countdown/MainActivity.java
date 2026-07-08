@@ -1,6 +1,7 @@
 package com.example.countdown;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private SharedPreferences sharedPreferences;
 
+    private TextView tvDate, tvDay, tvHour, tvMinute, tvSecond;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,73 +31,73 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("countdown", MODE_PRIVATE);
 
-        TextView tvDate = findViewById(R.id.tvDate);
-        TextView tvDay = findViewById(R.id.tvDay);
-        TextView tvHour = findViewById(R.id.tvHour);
-        TextView tvMinute = findViewById(R.id.tvMinute);
-        TextView tvSecond = findViewById(R.id.tvSecond);
+        tvDate = findViewById(R.id.tvDate);
+        tvDay = findViewById(R.id.tvDay);
+        tvHour = findViewById(R.id.tvHour);
+        tvMinute = findViewById(R.id.tvMinute);
+        tvSecond = findViewById(R.id.tvSecond);
+
         Button btnSelectDate = findViewById(R.id.btnSelectDate);
+
+        // Əvvəlki tarix varsa yüklə
+        long savedTarget = sharedPreferences.getLong("target_date", 0);
+
+        if (savedTarget > System.currentTimeMillis()) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(savedTarget);
+
+            tvDate.setText(
+                    c.get(Calendar.DAY_OF_MONTH) + "/" +
+                            (c.get(Calendar.MONTH) + 1) + "/" +
+                            c.get(Calendar.YEAR) + " " +
+                            String.format("%02d:%02d",
+                                    c.get(Calendar.HOUR_OF_DAY),
+                                    c.get(Calendar.MINUTE))
+            );
+
+            startCountdown(savedTarget);
+        }
 
         btnSelectDate.setOnClickListener(v -> {
 
-            Calendar current = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             Calendar target = Calendar.getInstance();
-
-            int year = current.get(Calendar.YEAR);
-            int month = current.get(Calendar.MONTH);
-            int day = current.get(Calendar.DAY_OF_MONTH);
 
             new DatePickerDialog(
                     this,
-                    (view, year1, month1, dayOfMonth) -> {
+                    (view, year, month, day) -> {
 
-                        tvDate.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1);
+                        new TimePickerDialog(
+                                this,
+                                (timeView, hour, minute) -> {
 
-                        target.set(year1, month1, dayOfMonth, 0, 0, 0);
+                                    target.set(year, month, day, hour, minute, 0);
 
-                        sharedPreferences.edit()
-                                .putLong("target_date", target.getTimeInMillis())
-                                .apply();
+                                    long targetMillis = target.getTimeInMillis();
 
-                        if (countDownTimer != null) {
-                            countDownTimer.cancel();
-                        }
+                                    tvDate.setText(
+                                            day + "/" +
+                                                    (month + 1) + "/" +
+                                                    year + " " +
+                                                    String.format("%02d:%02d", hour, minute)
+                                    );
 
-                        countDownTimer = new CountDownTimer(
-                                target.getTimeInMillis() - System.currentTimeMillis(),
-                                1000
-                        ) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
+                                    sharedPreferences.edit()
+                                            .putLong("target_date", targetMillis)
+                                            .apply();
 
-                                long totalSeconds = millisUntilFinished / 1000;
+                                    startCountdown(targetMillis);
 
-                                long days = totalSeconds / (24 * 60 * 60);
-                                long hours = (totalSeconds % (24 * 60 * 60)) / (60 * 60);
-                                long minutes = (totalSeconds % (60 * 60)) / 60;
-                                long seconds = totalSeconds % 60;
-
-                                tvDay.setText(days + " Gün");
-                                tvHour.setText(hours + " Saat");
-                                tvMinute.setText(minutes + " Dəqiqə");
-                                tvSecond.setText(seconds + " Saniyə");
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                tvDay.setText("0 Gün");
-                                tvHour.setText("0 Saat");
-                                tvMinute.setText("0 Dəqiqə");
-                                tvSecond.setText("0 Saniyə");
-                            }
-                        };
-
-                        countDownTimer.start();
+                                },
+                                calendar.get(Calendar.HOUR_OF_DAY),
+                                calendar.get(Calendar.MINUTE),
+                                true
+                        ).show();
 
                     },
-                    year,
-                    month,
-                    day
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
             ).show();
 
         });
@@ -104,5 +107,62 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    private void startCountdown(long targetMillis) {
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        long diff = targetMillis - System.currentTimeMillis();
+
+        if (diff <= 0) {
+            finishCountdown();
+            return;
+        }
+
+        countDownTimer = new CountDownTimer(diff, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                long totalSeconds = millisUntilFinished / 1000;
+
+                long days = totalSeconds / 86400;
+                long hours = (totalSeconds % 86400) / 3600;
+                long minutes = (totalSeconds % 3600) / 60;
+                long seconds = totalSeconds % 60;
+
+                tvDay.setText(days + " Gün");
+                tvHour.setText(hours + " Saat");
+                tvMinute.setText(minutes + " Dəqiqə");
+                tvSecond.setText(seconds + " Saniyə");
+            }
+
+            @Override
+            public void onFinish() {
+                finishCountdown();
+            }
+        };
+
+        countDownTimer.start();
+    }
+
+    private void finishCountdown() {
+
+        tvDay.setText("0 Gün");
+        tvHour.setText("0 Saat");
+        tvMinute.setText("0 Dəqiqə");
+        tvSecond.setText("Bitdi!");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 }
