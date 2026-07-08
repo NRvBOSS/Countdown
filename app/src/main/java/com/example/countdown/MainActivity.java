@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnSelectDate = findViewById(R.id.btnSelectDate);
 
-        // Əvvəlki tarix varsa yüklə
         long savedTarget = sharedPreferences.getLong("target_date", 0);
 
         if (savedTarget > System.currentTimeMillis()) {
