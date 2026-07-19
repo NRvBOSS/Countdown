@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     android:orientation="vertical"
-    android:gravity="center"
-    >
+    android:gravity="center_horizontal"
+    android:padding="24dp">
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Countdown"
-       />
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"/>
 
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tarix"
-         />
+        android:text="Tarix seçilməyib"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp"/>
 
+    <LinearLayout
+        android:id="@+id/second_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:padding="24dp"
+        >
     <TextView
         android:id="@+id/tvDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gün"
-        />
+        android:text="0 Gün"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"/>
 
     <TextView
         android:id="@+id/tvHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Saat"
-        />
+        android:text="0 Saat"
+        android:textSize="24sp"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/tvMinute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dəqiqə"
-        />
+        android:text="0 Dəqiqə"
+        android:textSize="24sp"
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:id="@+id/tvSecond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Saniyə"
-        />
+        android:text="0 Saniyə"
+        android:textSize="24sp"
+        android:layout_marginTop="8dp"/>
+    </LinearLayout>
 
     <Button
-        android:id="@+id/btnSelectDate"        android:layout_width="192dp"
+        android:id="@+id/btnSelectDate"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:text="Selected Date" />
-
+        android:text="Tarix Seç"
+        android:layout_marginTop="40dp"/>
 
 </LinearLayout>
